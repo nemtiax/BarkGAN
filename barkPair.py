@@ -1,3 +1,4 @@
+import tensorflow as tf
 class Pair(object):
     def __init__(self,generator,discriminator):
         self.generator = generator
@@ -5,7 +6,7 @@ class Pair(object):
         self.batch_size = generator.batch_size
 
     def build(self):
-        self.real_images = tf.placeholder(tf.float32,[self.batch_size,32,32,3],name='real_images')
+        self.real_images = tf.placeholder(tf.float32,[self.batch_size,64,64,3],name='real_images')
         self.z = tf.placeholder(tf.float32,[self.batch_size,100],name='z')
         self.G = self.generator.build(self.z)
         self.D_real,self.D_real_logits = self.discriminator.build(self.real_images)
