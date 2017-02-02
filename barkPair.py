@@ -8,7 +8,10 @@ class Pair(object):
     def build(self):
         self.real_images = tf.placeholder(tf.float32,[self.batch_size,64,64,3],name='real_images')
         self.z = tf.placeholder(tf.float32,[self.batch_size,100],name='z')
-        self.G = self.generator.build(self.z)
+        self.patch_masks = tf.placeholder(tf.float32,[self.batch_size,64,64,3],name='patch_masks')
+        self.patch_offsets = tf.placeholder(tf.int32,[self.batch_size,2],name='patch_offsets')
+
+        self.G = self.generator.build(self.z,self.real_images,self.patch_masks,self.patch_offsets)
         self.D_real,self.D_real_logits = self.discriminator.build(self.real_images)
         self.D_fake,self.D_fake_logits = self.discriminator.build(self.G)
 
