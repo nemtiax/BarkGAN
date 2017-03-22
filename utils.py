@@ -9,6 +9,7 @@ def get_image(image_path, image_size, is_crop=True, resize_w=64, is_grayscale = 
 def get_image_2(image_path,resize_w):
     im = scipy.misc.imread(image_path).astype(np.float)
     im = scipy.misc.imresize(im,[resize_w,resize_w])
+    im = im/127.5 - 1
     return im
 
 def imread(path, is_grayscale = False):

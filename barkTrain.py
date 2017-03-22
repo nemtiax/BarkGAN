@@ -37,8 +37,8 @@ class Trainer(object):
                    save_images_2(real_images,'./bark_samples_zoom/batch_{:02d}_{:04d}.png'.format(ep,batch_index))
                    print('{:4d} - {:4d}:  D_loss: {:.4f}, G_loss: {:.4f}'.format(ep,batch_index,d_loss,g_loss))
 
-                   #generated_images_zoomed = sess.run(self.pair.generator.output_zoomed,feed_dict={self.pair.z: z})
-                   #save_images_2(generated_images_zoomed,'./bark_samples_zoom/train_{:02d}_{:04d}_zoom.png'.format(ep,batch_index))
+                   generated_images_zoomed = sess.run(self.pair.generator.output_zoomed,feed_dict={self.pair.z: z})
+                   save_images_2(generated_images_zoomed,'./bark_samples_zoom/train_{:02d}_{:04d}_zoom.png'.format(ep,batch_index))
 
                    #print(np.mean(generated_images))
                    #print(np.mean(real_images))
