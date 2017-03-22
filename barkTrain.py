@@ -16,13 +16,14 @@ class Trainer(object):
 
     def load_data(self):
         self.data_files = glob(os.path.join("./data", "all_tiles", "*.png"))
-        self.data = [get_image(data_file, 256, is_crop=True, resize_w=64) for data_file in self.data_files]
+        #self.data = [get_image(data_file, 256, is_crop=False, resize_w=64) for data_file in self.data_files]
+        self.data = [get_image_2(data_file, resize_w=64) for data_file in self.data_files]
 
     def train(self,epochs):
 
         sample_z = np.random.uniform(-1, 1, size=(self.batch_size,100))
         count = 0
-        tf.initialize_all_variables().run()
+        tf.global_variables_initializer().run()
         for ep in range(epochs):
            self.shuffle_data()
            for batch_index in range(len(self.data)//self.batch_size):
@@ -32,9 +33,15 @@ class Trainer(object):
                count = count+1
                if(count%100==0):
                    generated_images = sess.run(self.pair.G,feed_dict={self.pair.z: z})
-                   save_images(generated_images,[8,8],'./bark_samples/train_{:02d}_{:04d}.png'.format(ep,batch_index))
-                   save_images(real_images,[8,8],'./bark_samples/batch_{:02d}_{:04d}.png'.format(ep,batch_index))
+                   save_images_2(generated_images,'./bark_samples_zoom/train_{:02d}_{:04d}.png'.format(ep,batch_index))
+                   save_images_2(real_images,'./bark_samples_zoom/batch_{:02d}_{:04d}.png'.format(ep,batch_index))
                    print('{:4d} - {:4d}:  D_loss: {:.4f}, G_loss: {:.4f}'.format(ep,batch_index,d_loss,g_loss))
+
+                   #generated_images_zoomed = sess.run(self.pair.generator.output_zoomed,feed_dict={self.pair.z: z})
+                   #save_images_2(generated_images_zoomed,'./bark_samples_zoom/train_{:02d}_{:04d}_zoom.png'.format(ep,batch_index))
+
+                   #print(np.mean(generated_images))
+                   #print(np.mean(real_images))
 
     def shuffle_data(self):
         shuffle(self.data)

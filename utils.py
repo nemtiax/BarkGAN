@@ -1,15 +1,23 @@
 #Taken from DCGAN code at https://github.com/carpedm20/DCGAN-tensorflow
 import scipy.misc
 import numpy as np
+import math
 
 def get_image(image_path, image_size, is_crop=True, resize_w=64, is_grayscale = False):
     return transform(imread(image_path, is_grayscale), image_size, is_crop, resize_w)
+
+def get_image_2(image_path,resize_w):
+    im = scipy.misc.imread(image_path).astype(np.float)
+    im = scipy.misc.imresize(im,[resize_w,resize_w])
+    return im
 
 def imread(path, is_grayscale = False):
     if (is_grayscale):
         return scipy.misc.imread(path, flatten = True).astype(np.float)
     else:
-        return scipy.misc.imread(path).astype(np.float)
+        im = scipy.misc.imread(path).astype(np.float)
+        # print(im.shape)
+        return im
 
 def center_crop(x, crop_h, crop_w=None, resize_w=64):
     if crop_w is None:
@@ -41,6 +49,22 @@ def transform(image, npx=64, is_crop=True, resize_w=64):
 
 def save_images(images, size, image_path,resize=-1):
     return imsave(inverse_transform(images), size, image_path,resize)
+
+def save_images_2(images, path):
+    image_size = images.shape[1]
+    num_images = images.shape[0]
+    output_image = np.zeros((image_size * 8,image_size * int(math.ceil(num_images/8.0)),3))
+    for i in range(num_images):
+        x = i%8
+        y = i//8
+        image = scipy.misc.toimage(images[i,:,:,:])
+
+        output_image[x*image_size:(x+1)*image_size,y*image_size:(y+1)*image_size,:] = image
+
+    image = scipy.misc.toimage(output_image,cmin=0,cmax=255)
+    image.save(path);
+
+
 
 def imsave(images, size, path, resize=-1):
     if(resize==-1):
